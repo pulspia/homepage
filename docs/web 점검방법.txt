@@ -1,0 +1,41 @@
+<www.pulspia.com> 점검방법
+
+1. wsl2 nginx 상태 확인
+sudo service nginx status
+==> Active: active (running)
+==> inactive이면, sudo service nginx restart
+
+2. 포트 80/443이 정상 바인딩되었는지 확인
+sudo lsof -i :80,443
+==> nginx 프로세스가 포트 80, 443에서 실행 중
+
+3. localhost에서 테스트
+curl -v http://localhost/
+curl -k https://localhost/
+
+4. 로컬 네트워크에서 테스트 (같은 WiFi/LAN)
+curl -v http://192.168.1.145/
+curl -k https://192.168.1.145/
+(또는 브라우저에서 테스트)
+http://192.168.1.145
+https://192.168.1.145
+
+5. 공인 IP로 테스트 (같은 네트워크)
+curl -v http://114.205.251.31/
+curl -k https://114.205.251.31/
+(또는 브라우저에서 테스트)
+http://114.205.251.31
+https://114.205.251.31
+
+6. Windows 포트포워딩 확인
+netsh interface portproxy show all
+==> 0.0.0.0  443  172.22.206.164  443
+==> 추가하려면, netsh interface portproxy add v4tov4 listenport=443 listenaddress=0.0.0.0 connectport=443 connectaddress=172.22.206.164
+
+7. 공유기 포트포워딩 확인
+외부 포트 80 → 192.168.1.145:80 확인
+외부 포트 443 → 192.168.1.145:443 확인
+
+8. 방화벽 확인 (관리자 파워쉘)
+Get-NetFirewallProfile -Profile Domain,Public,Private | Select Name, Enabled
+

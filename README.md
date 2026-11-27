@@ -68,3 +68,16 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+---
+
+## 보안 업데이트 (2026-10-27)
+
+Node.js 보안 릴리스(2026-10-21), PHP2Shell(CVE-2026-109618/109619), Next.js 긴급 업데이트(2026-10-14) 대응 내역입니다.
+
+- **Next.js**: 사용하지 않음(React + Express 5.1.0) — 해당 없음.
+- **Node.js 런타임**: Node 20.x는 EOL이라 2026-10-21 보안 릴리스(Brotli RCE CVE-2026-111497, TLS/DNS 취약점 등 10건)가 제공되지 않습니다. 개발 머신은 **v22.23.4로 교체 완료**(nvm 기본 버전, pm2 7.1.1 재설치)했고, 운영 서버는 22.23.4 이상(또는 24.22.1 이상)으로 교체가 필요합니다.
+- **PHP**: 이 프로젝트는 PHP를 사용하지 않아 해당 없음.
+- **적용 완료**: `ecosystem.config.js`의 npm 경로를 `v22.23.4`로 변경(개발 머신에 Node 22.23.4 설치 완료). 운영 서버에도 Node 22 설치 후 적용 필요.
+- 상세 배경과 절차는 `/mnt/e/dev/web/Pulspia 서비스 개발-배포 가이드.md` 15장 참조.

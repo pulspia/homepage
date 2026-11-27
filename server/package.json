@@ -1,0 +1,25 @@
+{
+  "name": "pulspia-monitoring-server",
+  "version": "1.0.0",
+  "description": "Pulspia Homepage - Monitoring Server",
+  "main": "monitor.js",
+  "scripts": {
+    "start": "./start-monitor.sh",
+    "stop": "./stop-monitor.sh",
+    "status": "./status-monitor.sh"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "systeminformation": "^5.21.20"
+  },
+  "keywords": [
+    "monitoring",
+    "server",
+    "system-info"
+  ],
+  "author": "Pulspia",
+  "license": "ISC"
+}

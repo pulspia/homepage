@@ -69,7 +69,12 @@ const Services = ({ lang }) => {
   return (
     <section id="services" className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
       <div className="container mx-auto text-center px-4">
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-12">{c.title}</h2>
+        <a href="/services" className="inline-block group">
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-12 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200">
+            {c.title}
+            <span className="inline-block ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">→</span>
+          </h2>
+        </a>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {c.services.map((service, index) => (
             <div key={index} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-gray-700 dark:text-gray-300 transform hover:-translate-y-2 transition-transform duration-300">

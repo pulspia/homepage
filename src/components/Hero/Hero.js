@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 const content = {
   ko: {
     title: '사람을 위한 AI 솔루션',
-    subtitle1: '저희 자하랩스는 비즈니스 성장을 주도하는 지능형 소프트웨어 개발 및 데이터 분석 서비스를 제공합니다.',
+    subtitle1: '저희 펄스피아는 비즈니스 성장을 주도하는 지능형 소프트웨어 개발 및 데이터 분석 서비스를 제공합니다.',
     subtitle2: 'AI Solutions for Humans',
     button: '문의하기',
   },
   en: {
     title: 'AI Solutions for Humans',
-    subtitle1: 'JAHA LABS provides intelligent software development and data analysis services to drive business growth.',
+    subtitle1: 'Pulspia provides intelligent software development and data analysis services to drive business growth.',
     subtitle2: 'AI Solutions for Humans',
     button: 'Get in Touch',
   }

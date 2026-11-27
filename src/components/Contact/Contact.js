@@ -1,130 +1,82 @@
-import React, { useState, useRef, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
+import React, { useState } from 'react';
+import { Mail, Send, Copy, Check } from 'lucide-react';
+
+const CONTACT_EMAIL = 'pulspia@gmail.com';
 
 const content = {
   ko: {
     title: '문의하기',
-    name: '성함',
-    email: '이메일',
-    message: '문의 내용',
-    button: '메시지 보내기',
-    sending: '전송 중...',
-    success: '메시지가 성공적으로 전송되었습니다!',
-    error: '메시지 전송에 실패했습니다. 다시 시도해주세요.',
+    description: '궁금한 점은 이메일로 보내주세요.',
+    mailApp: '메일 쓰기',
+    gmail: 'Gmail로 쓰기',
+    copy: '주소 복사',
+    copied: '복사되었습니다',
+    copyError: '복사하지 못했습니다. 위 주소를 직접 선택해 복사해주세요.',
+    subject: '[Pulspia 문의]',
+    body: '성함:\r\n회사/소속:\r\n문의 내용:\r\n',
   },
   en: {
     title: 'Contact Us',
-    name: 'Your Name',
-    email: 'Your Email',
-    message: 'Your Message',
-    button: 'Send Message',
-    sending: 'Sending...',
-    success: 'Message sent successfully!',
-    error: 'Failed to send message. Please try again.',
+    description: 'Send us your questions by email.',
+    mailApp: 'Write Email',
+    gmail: 'Write with Gmail',
+    copy: 'Copy Address',
+    copied: 'Copied',
+    copyError: 'Could not copy. Please select the address above and copy it.',
+    subject: '[Pulspia Inquiry]',
+    body: 'Name:\r\nCompany:\r\nMessage:\r\n',
   }
 };
 
+const primaryButton =
+  'inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105';
+const secondaryButton =
+  'inline-flex items-center justify-center gap-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105';
+
 const Contact = ({ lang }) => {
   const c = content[lang];
-  const form = useRef();
-  const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState({ type: '', message: '' });
+  const [copyStatus, setCopyStatus] = useState('idle');
 
-  // Initialize EmailJS
-  useEffect(() => {
-    // Initialize EmailJS with public key from environment variable
-    emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY);
-  }, []);
+  const subject = encodeURIComponent(c.subject);
+  const body = encodeURIComponent(c.body);
+  const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${subject}&body=${body}`;
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setStatus({ type: '', message: '' });
-
-    // Get form data
-    const formData = new FormData(form.current);
-    const messageData = {
-      from_name: formData.get('from_name'),
-      from_email: formData.get('from_email'),
-      message: formData.get('message'),
-      to_email: 'pulspia@gmail.com',
-      timestamp: new Date().toLocaleString('ko-KR')
-    };
-
-    // Debug: Log the data being sent
-    console.log('📧 전송할 데이터:', messageData);
-    console.log('✉️ from_email 값:', messageData.from_email);
-
-    // Real EmailJS sending
-    emailjs.send(
-      process.env.REACT_APP_EMAILJS_SERVICE_ID,
-      process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-      messageData,
-      process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-    ).then((result) => {
-      console.log('이메일 전송 성공:', result.text);
-      setStatus({ type: 'success', message: c.success });
-      form.current.reset();
-      setIsLoading(false);
-    }).catch((error) => {
-      console.error('이메일 전송 실패:', error);
-      setStatus({ type: 'error', message: c.error });
-      setIsLoading(false);
-    });
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setCopyStatus('copied');
+      setTimeout(() => setCopyStatus('idle'), 2000);
+    } catch (error) {
+      setCopyStatus('error');
+    }
   };
 
   return (
     <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
       <div className="container mx-auto text-center px-4">
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">{c.title}</h2>
-        <form ref={form} onSubmit={sendEmail} className="max-w-xl mx-auto">
-          <div className="mb-4">
-            <input 
-              type="text" 
-              name="from_name"
-              placeholder={c.name} 
-              required
-              className="w-full p-3 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            />
-          </div>
-          <div className="mb-4">
-            <input 
-              type="email" 
-              name="from_email"
-              placeholder={c.email} 
-              required
-              className="w-full p-3 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            />
-          </div>
-          <div className="mb-4">
-            <textarea 
-              name="message"
-              placeholder={c.message} 
-              rows="4" 
-              required
-              className="w-full p-3 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
-          
-          {/* Status Message */}
-          {status.message && (
-            <div className={`mb-4 p-3 rounded ${
-              status.type === 'success' 
-                ? 'bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200' 
-                : 'bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200'
-            }`}>
-              {status.message}
-            </div>
-          )}
-          
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 disabled:transform-none"
-          >
-            {isLoading ? c.sending : c.button}
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">{c.title}</h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">{c.description}</p>
+        <p className="text-2xl font-semibold text-gray-800 dark:text-white mb-8 select-all break-all">
+          {CONTACT_EMAIL}
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href={mailtoUrl} className={primaryButton}>
+            <Mail size={18} />
+            {c.mailApp}
+          </a>
+          <a href={gmailUrl} target="_blank" rel="noopener noreferrer" className={primaryButton}>
+            <Send size={18} />
+            {c.gmail}
+          </a>
+          <button type="button" onClick={copyEmail} className={secondaryButton}>
+            {copyStatus === 'copied' ? <Check size={18} /> : <Copy size={18} />}
+            {copyStatus === 'copied' ? c.copied : c.copy}
           </button>
-        </form>
+        </div>
+        {copyStatus === 'error' && (
+          <p role="alert" className="mt-4 text-red-600 dark:text-red-300">{c.copyError}</p>
+        )}
       </div>
     </section>
   );

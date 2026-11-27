@@ -1,0 +1,36 @@
+name: Supabase Keep-Alive
+
+# 6일마다 실행 (7일 비활성화 정책보다 1일 빠름)
+on:
+  schedule:
+    # 매 6일마다 오전 9시(UTC)에 실행
+    # 분 시 일 월 요일
+    - cron: '0 9 */6 * *'
+
+  # 수동 실행도 가능하도록 설정
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install @supabase/supabase-js
+
+      - name: Ping Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node scripts/supabase-ping.js
+
+      - name: Log success
+        run: echo "✅ Supabase keep-alive ping 성공 - $(date)"
